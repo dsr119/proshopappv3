@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pro Shop – New Appointment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <style>
+    :root {
+      --bg: #05070a;
+      --card: #10131a;
+      --card-soft: #151924;
+      --accent: #4da3ff;
+      --accent-soft: rgba(77, 163, 255, 0.18);
+      --border: #222632;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --radius-lg: 16px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #151927 0, #05070a 46%);
+      color: var(--text);
+    }
+
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .app-header {
+      padding: 16px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: linear-gradient(to bottom, rgba(5,7,10,0.97), rgba(5,7,10,0.85) 65%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .app-title-block { display: flex; flex-direction: column; gap: 1px; }
+
+    .app-title { font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+
+    .app-subtitle { font-size: 12px; color: var(--muted); }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.25);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.7);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34,197,94,0.25);
+    }
+
+    .app-main {
+      flex: 1;
+      padding: 0 16px 90px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(77,163,255,0.08), rgba(15,23,42,0.65), #05070a);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 12px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .field-input,
+    .field-select {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .field-input:focus,
+    .field-select:focus {
+      border-color: var(--accent);
+      background: rgba(15,23,42,0.95);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    /* Appointment list styles */
+    .appt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .appt-empty {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .appt-item {
+      border-radius: 12px;
+      border: 1px solid rgba(31,41,55,0.9);
+      background: rgba(15,23,42,0.95);
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .appt-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .appt-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .appt-time-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      color: #e5e7eb;
+    }
+
+    .appt-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .appt-completed {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #4ade80;
+    }
+
+    .appt-completed-dot {
+      margin-right: 4px;
+    }
+
+    /* Greyed-out time option */
+    .time-busy {
+      color: #6b7280;
+      background: #020617;
+      font-style: italic;
+    }
+
+    /* Footer */
+    .app-footer {
+      position: sticky;
+      bottom: 0;
+      background: rgba(5,7,10,0.97);
+      padding-top: 6px;
+    }
+
+    .footer-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 16px 10px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom right, #60a5fa, #2563eb);
+      border: none;
+      color: white;
+      font-weight: 600;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.9);
+    }
+
+    /* Bottom nav */
+    .bottom-nav { border-top: 1px solid #2d3543; padding-top: 6px; }
+    .bottom-nav-row { display: flex; justify-content: space-between; }
+
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      font-size: 10px;
+      color: var(--muted);
+      padding: 6px 0;
+    }
+
+    .nav-item-active { color: #e5e7eb; }
+
+    .nav-icon {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 1px solid #4b5563;
+      display: flex; justify-content: center; align-items: center;
+      margin: 0 auto 2px;
+    }
+
+    .nav-item-active .nav-icon {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .bottom-nav { border-top: 1px solid #2d3543; padding-top: 6px; }
+.bottom-nav-row { display: flex; justify-content: space-between; }
+
+.nav-item {
+  flex: 1;
+  display: flex;              /* make the whole thing clickable */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 6px 0;
+  text-decoration: none;      /* remove blue underline */
+}
+
+.nav-item-active { color: #e5e7eb; }
+
+.nav-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid #4b5563;
+  display: flex; justify-content: center; align-items: center;
+  margin: 0 auto 2px;
+}
+
+.nav-item-active .nav-icon {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+/* --- Footer Navigation (Upgraded) --- */
+
+.app-footer {
+  position: sticky;
+  bottom: 0;
+  background: #0c0f16;
+  padding: 8px 0 4px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.footer-inner {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 12px 6px;
+}
+
+.bottom-nav {
+  width: 100%;
+}
+
+.bottom-nav-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0 6px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-item-active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+.nav-item-active .nav-icon {
+  border-color: var(--accent);
+  background: rgba(77,163,255,0.12);
+  box-shadow: 0 0 8px rgba(77,163,255,0.4);
+}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <header class="app-header">
+      <div class="app-title-block">
+        <div class="app-title">New Appointment</div>
+        <div class="app-subtitle">Schedule drilling or service appointments.</div>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Scheduler
+      </div>
+    </header>
+
+    <main class="app-main">
+
+      <!-- FORM CARD -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Appointment Details</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptName">Customer Name</label>
+          <input id="apptName" type="text" class="field-input" placeholder="Doug Smith" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptPhone">Phone Number</label>
+          <input id="apptPhone" type="text" class="field-input" placeholder="570-555-1234" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptService">Service</label>
+          <input id="apptService" type="text" class="field-input" placeholder="Fit & Drill, Consultation, Resurface etc." />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptDate">Date</label>
+          <input id="apptDate" type="date" class="field-input" />
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptLocation">Location</label>
+          <select id="apptLocation" class="field-select">
+            <option value="">Select location</option>
+            <option value="Valley Lanes">Valley Lanes</option>
+            <option value="Idle Hours South">Idle Hours South</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="apptTime">Time</label>
+          <select id="apptTime" class="field-select">
+            <option value="">Select time</option>
+            <option>6:00 PM</option>
+            <option>6:15 PM</option>
+            <option>6:30 PM</option>
+            <option>6:45 PM</option>
+            <option>7:00 PM</option>
+            <option>7:15 PM</option>
+            <option>7:30 PM</option>
+            <option>7:45 PM</option>
+            <option>8:00 PM</option>
+            <option>8:15 PM</option>
+            <option>8:30 PM</option>
+            <option>8:45 PM</option>
+            <option>9:00 PM</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- APPOINTMENT LIST CARD -->
+      <section class="card" id="apptListCard">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Scheduled for This Day</div>
+            <div class="card-subtitle" id="apptListDateLabel">
+              Select a date to view appointments.
+            </div>
+          </div>
+        </div>
+
+        <div id="apptListBody" class="appt-list">
+          <div class="appt-empty">No date selected.</div>
+        </div>
+      </section>
+
+    </main>
+
+   <footer class="app-footer">
+  <div class="footer-inner">
+    <!-- ✅ Submit button for Appts -->
+    <button class="btn-primary" id="saveApptBtn" type="button">
+      Save Appointment
+    </button>
+
+    <nav class="bottom-nav">
+      <div class="bottom-nav-row">
+
+        <a href="orderPage.html" class="nav-item">
+          <div class="nav-icon">🧾</div>
+          Orders
+        </a>
+
+        <a href="servicePage.html" class="nav-item">
+          <div class="nav-icon">🛠️</div>
+          Services
+        </a>
+
+        <a href="index.html" class="nav-item">
+          <div class="nav-icon">📋</div>
+          To-Do's
+        </a>
+
+        <a href="appPage.html" class="nav-item nav-item-active">
+          <div class="nav-icon">📅</div>
+          Appts
+        </a>
+
+      </div>
+    </nav>
+  </div>
+</footer>
+
+
+    
+
+  </div>
+
+  <script>
+    (function () {
+      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzOnZm6-jWd8gNG1C7-_6h97knVAP4X8D8infd1ldRt0xEegSfSfUMKNR-usMDMjkqS2w/exec';
+
+      function formatDateLabel(yyyyMmDd) {
+        if (!yyyyMmDd) return 'Select a date to view appointments.';
+        const [y, m, d] = yyyyMmDd.split('-');
+        return `${m}/${d}/${y}`;
+      }
+
+      // Convert "6:15 PM" → minutes since 0:00
+      function timeStrToMinutes(str) {
+        if (!str) return null;
+        const trimmed = str.trim();
+        const parts = trimmed.split(' ');
+        if (parts.length !== 2) return null;
+        const time = parts[0]; // "6:15"
+        const ampm = parts[1].toUpperCase(); // "PM"
+
+        const [hStr, mStr] = time.split(':');
+        let hour = parseInt(hStr, 10);
+        const minute = parseInt(mStr || '0', 10);
+
+        if (ampm === 'PM' && hour !== 12) hour += 12;
+        if (ampm === 'AM' && hour === 12) hour = 0;
+
+        return hour * 60 + minute;
+      }
+
+      // Convert minutes since 0:00 → "H:MM AM/PM" matching our dropdown format
+      function minutesToTimeStr(total) {
+        let hour = Math.floor(total / 60);
+        let minute = total % 60;
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        if (hour === 0) hour = 12;
+        else if (hour > 12) hour -= 12;
+        const mm = minute.toString().padStart(2, '0');
+        return `${hour}:${mm} ${ampm}`;
+      }
+
+      // Grey out options that are busy; still selectable
+      function updateTimeOptions(busyTimesSet) {
+        const select = document.getElementById('apptTime');
+        const options = Array.from(select.options);
+
+        options.forEach(opt => {
+          if (!opt.value) {
+            opt.classList.remove('time-busy');
+            return;
+          }
+          if (busyTimesSet.has(opt.text.trim())) {
+            opt.classList.add('time-busy');
+          } else {
+            opt.classList.remove('time-busy');
+          }
+        });
+      }
+
+      async function loadAppointmentsForDate(dateStr) {
+        const labelEl = document.getElementById('apptListDateLabel');
+        const listEl = document.getElementById('apptListBody');
+        const locationFilter = document.getElementById('apptLocation').value;
+
+        labelEl.textContent = formatDateLabel(dateStr);
+
+        if (!dateStr) {
+          listEl.innerHTML = '<div class="appt-empty">No date selected.</div>';
+          updateTimeOptions(new Set()); // clear busy styling
+          return;
+        }
+
+        try {
+          const url = WEB_APP_URL + '?date=' + encodeURIComponent(dateStr);
+          const res = await fetch(url);
+
+          if (!res.ok) {
+            throw new Error('HTTP ' + res.status);
+          }
+
+          const data = await res.json();
+          const appts = (data && data.appointments) || [];
+
+          // Build busy time slots for this location
+          const busyTimes = new Set();
+
+          appts.forEach(a => {
+            if (!a.time) return;
+            if (locationFilter && a.location !== locationFilter) return;
+
+            const baseMinutes = timeStrToMinutes(a.time);
+            if (baseMinutes == null) return;
+
+            // Base time, 15 min before, 15 min after
+            const candidates = [
+              baseMinutes - 15,
+              baseMinutes,
+              baseMinutes + 15
+            ];
+
+            candidates.forEach(mins => {
+              // Keep within our 6:00pm–9:00pm window (optional but nice)
+              if (mins >= 18 * 60 && mins <= 21 * 60) {
+                busyTimes.add(minutesToTimeStr(mins));
+              }
+            });
+          });
+
+          updateTimeOptions(busyTimes);
+
+          if (!appts.length) {
+            listEl.innerHTML = '<div class="appt-empty">No appointments scheduled for this day.</div>';
+            return;
+          }
+
+          listEl.innerHTML = '';
+          appts.forEach(a => {
+            const completed = (a.completed || '').toString().toLowerCase() === 'yes';
+            const div = document.createElement('div');
+            div.className = 'appt-item';
+            div.innerHTML = `
+              <div class="appt-item-header">
+                <div class="appt-name">${a.name || 'Unknown'}</div>
+                <div class="appt-time-pill">${a.time || ''}</div>
+              </div>
+              <div class="appt-meta">
+                ${a.service ? a.service + ' • ' : ''}${a.location || ''}
+              </div>
+              <div class="appt-meta">
+                ${a.phone || ''}
+              </div>
+              ${completed ? `
+                <div class="appt-completed">
+                  <span class="appt-completed-dot">●</span>Completed
+                </div>` : ''}
+            `;
+            listEl.appendChild(div);
+          });
+
+        } catch (err) {
+          console.error('Error loading appointments:', err);
+          listEl.innerHTML = '<div class="appt-empty">Error loading appointments.</div>';
+          updateTimeOptions(new Set());
+        }
+      }
+
+      async function handleSaveAppt() {
+        const name     = document.getElementById('apptName').value.trim();
+        const phone    = document.getElementById('apptPhone').value.trim();
+        const service  = document.getElementById('apptService').value.trim();
+        const apptDate = document.getElementById('apptDate').value; // YYYY-MM-DD
+        const location = document.getElementById('apptLocation').value;
+        const apptTime = document.getElementById('apptTime').value;
+
+        const payload = { name, phone, service, apptDate, location, apptTime };
+
+        if (!WEB_APP_URL || !WEB_APP_URL.startsWith('https://')) {
+          alert('Web app URL not set correctly.');
+          return;
+        }
+
+        try {
+          await fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          alert('Appointment submitted!');
+
+          // Refresh the list + busy times for the selected date
+          if (apptDate) {
+            setTimeout(() => loadAppointmentsForDate(apptDate), 400);
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Failed to submit appointment: ' + err.message);
+        }
+      }
+
+      // Save button
+      document.getElementById('saveApptBtn')
+        .addEventListener('click', handleSaveAppt);
+
+      // Date change → refresh list + busy slots
+      document.getElementById('apptDate')
+        .addEventListener('change', e => {
+          const v = e.target.value; // "YYYY-MM-DD"
+          loadAppointmentsForDate(v || '');
+        });
+
+      // Location change → refilter busy times for selected date
+      document.getElementById('apptLocation')
+        .addEventListener('change', () => {
+          const dateVal = document.getElementById('apptDate').value;
+          if (dateVal) {
+            loadAppointmentsForDate(dateVal);
+          }
+        });
+    })();
+  </script>
+</body>
+</html>

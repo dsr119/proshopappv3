@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pro Shop – New Order</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <style>
+    :root {
+      --bg: #05070a;
+      --card: #10131a;
+      --card-soft: #151924;
+      --accent: #4da3ff;
+      --accent-soft: rgba(77, 163, 255, 0.18);
+      --border: #222632;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --radius-lg: 16px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #151927 0, #05070a 46%);
+      color: var(--text);
+    }
+
+    .app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      padding: 16px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: linear-gradient(to bottom, rgba(5,7,10,0.97), rgba(5,7,10,0.85) 65%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .app-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .app-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .app-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.25);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.7);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34,197,94,0.25);
+    }
+
+    .app-main {
+      flex: 1;
+      padding: 0 16px 90px; /* room for bottom nav */
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(77,163,255,0.08) 0, rgba(15,23,42,0.7) 30%, #05070a 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 6px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.22);
+      color: var(--muted);
+      background: rgba(15,23,42,0.6);
+    }
+
+    .grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .field-label span {
+      color: rgba(156,163,175,0.7);
+    }
+
+    .field-input,
+    .field-select,
+    .field-textarea {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .field-input:focus,
+    .field-select:focus,
+    .field-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+      background: rgba(15,23,42,0.95);
+    }
+
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: rgba(148,163,184,0.8);
+    }
+
+    .field-textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .checkbox-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .checkbox-wrap input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .section-pill {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.3);
+      color: rgba(209,213,219,0.9);
+      background: rgba(15,23,42,0.9);
+    }
+
+    .subcard {
+      background: var(--card-soft);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(31,41,55,0.9);
+      padding: 10px 10px 8px;
+      margin-bottom: 6px;
+    }
+
+    .subcard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .subcard-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .helper {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .btn-chip-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .btn-chip {
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      border: 1px solid rgba(148,163,184,0.35);
+      background: rgba(15,23,42,0.9);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .btn-chip-accent {
+      border-color: rgba(77,163,255,0.7);
+      color: #bfdbfe;
+      background: rgba(37,99,235,0.1);
+    }
+
+    .btn-chip span.icon {
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .order-row {
+      margin-bottom: 8px;
+    }
+
+    /* Footer area: Save button + bottom nav */
+    .app-footer {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(5,7,10,0.98), rgba(5,7,10,0.95), rgba(5,7,10,0.9));
+      backdrop-filter: blur(14px);
+      z-index: 10;
+      padding-top: 6px;
+    }
+
+    .footer-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 16px 8px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: radial-gradient(circle at top left, #60a5fa, #2563eb 45%, #1d4ed8 100%);
+      color: white;
+      box-shadow: 0 14px 30px rgba(37,99,235,0.55);
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.9);
+    }
+
+    /* Bottom nav mock */
+    .bottom-nav {
+      border-top: 1px solid rgba(31,41,55,0.95);
+      padding-top: 6px;
+      padding-bottom: 4px;
+    }
+
+    .bottom-nav-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 4px 4px;
+      font-size: 10px;
+      color: var(--muted);
+      opacity: 0.85;
+    }
+
+    .nav-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .nav-item-active {
+      color: #e5e7eb;
+    }
+
+    .nav-item-active .nav-icon {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    @media (min-width: 540px) {
+      .app-header {
+        padding-inline: 22px;
+      }
+      .app-main {
+        padding-inline: 22px;
+      }
+      .footer-inner {
+        padding-inline: 22px;
+      }
+    }
+
+    .bottom-nav { border-top: 1px solid #2d3543; padding-top: 6px; }
+.bottom-nav-row { display: flex; justify-content: space-between; }
+
+.nav-item {
+  flex: 1;
+  display: flex;              /* make the whole thing clickable */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 6px 0;
+  text-decoration: none;      /* remove blue underline */
+}
+
+.nav-item-active { color: #e5e7eb; }
+
+.nav-icon {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1px solid #4b5563;
+  display: flex; justify-content: center; align-items: center;
+  margin: 0 auto 2px;
+}
+
+.nav-item-active .nav-icon {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+}
+
+/* --- Footer Navigation (Upgraded) --- */
+
+.app-footer {
+  position: sticky;
+  bottom: 0;
+  background: #0c0f16;
+  padding: 8px 0 4px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.footer-inner {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 12px 6px;
+}
+
+.bottom-nav {
+  width: 100%;
+}
+
+.bottom-nav-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0 6px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.nav-item-active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-icon {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+.nav-item-active .nav-icon {
+  border-color: var(--accent);
+  background: rgba(77,163,255,0.12);
+  box-shadow: 0 0 8px rgba(77,163,255,0.4);
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="app-title-block">
+        <div class="app-title">New Order</div>
+        <div class="app-subtitle">Create ball, accessory, and shoe orders in one screen.</div>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Today’s queue
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- CUSTOMER + ORDER INFO -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Customer & Order Info</div>
+          <div class="card-tag">Step 1</div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label class="field-label" for="customerName">Customer Name</label>
+            <input id="customerName" type="text" class="field-input" placeholder="Doug Smith" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="phone">Phone Number</label>
+            <input id="phone" type="tel" class="field-input" placeholder="570-555-1234" />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label" for="location">Location of Order</label>
+            <input id="location" type="text" class="field-input" placeholder="Valley / South / Other" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label" for="dueDate">Order Due Date</label>
+            <input id="dueDate" type="date" class="field-input" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="staff">Staff Member</label>
+            <input id="staff" type="text" class="field-input" placeholder="Doug S / Keith / ..." />
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="paid" />
+            <span>Paid in full</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- BALL ORDER -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Ball Order</div>
+          <div class="section-pill">Ball</div>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-header">
+            <div class="subcard-title">Ball Details</div>
+            <div class="btn-chip-row">
+              <button type="button" class="btn-chip" data-action="remove" data-section="ball">
+                <span class="icon">−</span> Remove Item
+              </button>
+              <button type="button" class="btn-chip btn-chip-accent" data-action="add" data-section="ball">
+                <span class="icon">+</span> Add Item
+              </button>
+            </div>
+          </div>
+          <div class="helper">1 ball per line</div>
+
+          <div id="ballItems">
+            <div class="order-row">
+              <div class="grid">
+                <div class="field">
+                  <label class="field-label">Ball Name</label>
+                  <input type="text" class="field-input" placeholder="Jackal Onyx, Phaze II, etc." />
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="field">
+                    <label class="field-label">Weight (lb)</label>
+                    <input type="number" inputmode="decimal" class="field-input" placeholder="15" />
+                  </div>
+
+                  <div class="field">
+                    <label class="field-label">Qty</label>
+                    <input type="number" class="field-input" placeholder="1" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACCESSORY ORDER -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Accessory Order</div>
+          <div class="section-pill">Accessories</div>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-header">
+            <div class="subcard-title">Accessory Details</div>
+            <div class="btn-chip-row">
+              <button type="button" class="btn-chip" data-action="remove" data-section="accessory">
+                <span class="icon">−</span> Remove Item
+              </button>
+              <button type="button" class="btn-chip btn-chip-accent" data-action="add" data-section="accessory">
+                <span class="icon">+</span> Add Item
+              </button>
+            </div>
+          </div>
+          <div class="helper">Example: tape, cleaner, grips</div>
+
+          <div id="accessoryItems">
+            <div class="order-row">
+              <div class="grid">
+                <div class="field">
+                  <label class="field-label">Accessory Name</label>
+                  <input type="text" class="field-input" placeholder="White tape, cleaner, etc." />
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="field">
+                    <label class="field-label">Qty</label>
+                    <input type="number" class="field-input" placeholder="1" />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field-label">Notes <span>(optional)</span></label>
+                  <textarea class="field-textarea" placeholder="Colors, sizes, brands, special instructions..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHOE ORDER -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Shoe Order</div>
+          <div class="section-pill">Shoes</div>
+        </div>
+
+        <div class="subcard">
+          <div class="subcard-header">
+            <div class="subcard-title">Shoe Details</div>
+            <div class="btn-chip-row">
+              <button type="button" class="btn-chip" data-action="remove" data-section="shoe">
+                <span class="icon">−</span> Remove Item
+              </button>
+              <button type="button" class="btn-chip btn-chip-accent" data-action="add" data-section="shoe">
+                <span class="icon">+</span> Add Item
+              </button>
+            </div>
+          </div>
+          <div class="helper">Dexter, Brunswick, etc.</div>
+
+          <div id="shoeItems">
+            <div class="order-row">
+              <div class="grid">
+                <div class="field">
+                  <label class="field-label">Shoe Name</label>
+                  <input type="text" class="field-input" placeholder="Dexter SST 8 Pro, etc." />
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="field">
+                    <label class="field-label">Shoe Size</label>
+                    <input type="text" class="field-input" placeholder="10.5" />
+                  </div>
+
+                  <div class="field">
+                    <label class="field-label">Male / Female</label>
+                    <select class="field-select">
+                      <option value="">Select</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="unisex">Unisex</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-2">
+                  <div class="field">
+                    <label class="field-label">Color</label>
+                    <input type="text" class="field-input" placeholder="Black/Red, White, etc." />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="field-label">Notes <span>(optional)</span></label>
+                  <textarea class="field-textarea" placeholder="Widths, interchangeable soles/heels, special fit notes..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+  <div class="footer-inner">
+    <!-- ✅ Submit button for Orders -->
+    <button class="btn-primary" id="saveOrderBtn" type="button">
+      Save Order
+    </button>
+
+    <nav class="bottom-nav">
+      <div class="bottom-nav-row">
+
+        <a href="orderPage.html" class="nav-item nav-item-active">
+          <div class="nav-icon">🧾</div>
+          Orders
+        </a>
+
+        <a href="servicePage.html" class="nav-item">
+          <div class="nav-icon">🛠️</div>
+          Services
+        </a>
+
+        <a href="index.html" class="nav-item">
+          <div class="nav-icon">📋</div>
+          To-Do's
+        </a>
+
+        <a href="appPage.html" class="nav-item">
+          <div class="nav-icon">📅</div>
+          Appts
+        </a>
+
+      </div>
+    </nav>
+  </div>
+</footer>
+
+
+    
+     
+  </div>
+
+  <script>
+  (function () {
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw0sfodv2vXwQXgyeDP-ygZhULOVL06h3YVsNbwafq6M6cy9UxTkDnMkmMcngnyTI_V/exec'; // <-- paste your /exec URL
+
+    function getContainerId(section) {
+      if (section === "ball") return "ballItems";
+      if (section === "accessory") return "accessoryItems";
+      if (section === "shoe") return "shoeItems";
+      return null;
+    }
+
+    function addItem(section) {
+      const containerId = getContainerId(section);
+      const container = containerId && document.getElementById(containerId);
+      if (!container) return;
+
+      const firstRow = container.querySelector(".order-row");
+      if (!firstRow) return;
+
+      const clone = firstRow.cloneNode(true);
+      clone.querySelectorAll("input, textarea, select").forEach(el => {
+        if (el.type === "checkbox" || el.type === "radio") {
+          el.checked = false;
+        } else {
+          el.value = "";
+        }
+      });
+
+      container.appendChild(clone);
+    }
+
+    function removeItem(section) {
+      const containerId = getContainerId(section);
+      const container = containerId && document.getElementById(containerId);
+      if (!container) return;
+
+      const rows = container.querySelectorAll(".order-row");
+      if (rows.length > 1) {
+        container.removeChild(rows[rows.length - 1]);
+      }
+    }
+
+    // Attach add/remove listeners
+    document.querySelectorAll("[data-action='add']").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const section = this.getAttribute("data-section");
+        addItem(section);
+      });
+    });
+
+    document.querySelectorAll("[data-action='remove']").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const section = this.getAttribute("data-section");
+        removeItem(section);
+      });
+    });
+
+    function collectBalls() {
+      const items = [];
+      document.querySelectorAll("#ballItems .order-row").forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        if (inputs.length < 3) return;
+        const name = inputs[0].value.trim();
+        const weight = inputs[1].value.trim();
+        const qty = inputs[2].value.trim();
+
+        if (!name && !weight && !qty) return;
+
+        items.push({ name, weight, qty });
+      });
+      return items;
+    }
+
+    function collectAccessories() {
+      const items = [];
+      document.querySelectorAll("#accessoryItems .order-row").forEach(row => {
+        const nameInput = row.querySelector("input[type='text']");
+        const qtyInput = row.querySelector("input[type='number']");
+        const notesArea = row.querySelector("textarea");
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const qty = qtyInput ? qtyInput.value.trim() : "";
+        const notes = notesArea ? notesArea.value.trim() : "";
+
+        if (!name && !qty && !notes) return;
+
+        items.push({ name, qty, notes });
+      });
+      return items;
+    }
+
+    function collectShoes() {
+      const items = [];
+      document.querySelectorAll("#shoeItems .order-row").forEach(row => {
+        const textInputs = row.querySelectorAll("input[type='text']");
+        const select = row.querySelector("select");
+        const notesArea = row.querySelector("textarea");
+
+        const name = textInputs[0] ? textInputs[0].value.trim() : "";
+        const size = textInputs[1] ? textInputs[1].value.trim() : "";
+        const gender = select ? select.value.trim() : "";
+        const color = textInputs[2] ? textInputs[2].value.trim() : "";
+        const notes = notesArea ? notesArea.value.trim() : "";
+
+        if (!name && !size && !gender && !color && !notes) return;
+
+        items.push({ name, size, gender, color, notes });
+      });
+      return items;
+    }
+
+    async function handleSave() {
+      const customerName = document.getElementById("customerName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const dueDate = document.getElementById("dueDate").value;
+      const staff = document.getElementById("staff").value.trim();
+      const paid = document.getElementById("paid").checked;
+
+      const balls = collectBalls();
+      const accessories = collectAccessories();
+      const shoes = collectShoes();
+
+      const payload = {
+        customerName,
+        phone,
+        location,
+        dueDate,
+        staff,
+        paid,
+        balls,
+        accessories,
+        shoes
+      };
+
+      if (!WEB_APP_URL || WEB_APP_URL.indexOf('https://') !== 0) {
+        alert("Web app URL not set correctly.");
+        return;
+      }
+
+      try {
+        // Use no-cors so the browser doesn't block the request on CORS
+        await fetch(WEB_APP_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            // This will be treated as a simple request; Apps Script can still read postData.contents
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        alert("Order submitted!");
+
+        // Optional: clear fields after submit
+        // location.reload();
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit order: " + err.message);
+      }
+    }
+
+    document.getElementById("saveOrderBtn")
+      .addEventListener("click", handleSave);
+  })();
+</script>
+
+</body>
+</html>

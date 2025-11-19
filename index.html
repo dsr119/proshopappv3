@@ -2,315 +2,505 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pro Shop – To-Do's</title>
+  <title>Pro Shop – To-Do List</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 
   <style>
-    :root {
-      --bg: #05070a;
-      --card: #10131a;
-      --card-soft: #151924;
-      --accent: #4da3ff;
-      --accent-soft: rgba(77, 163, 255, 0.18);
-      --border: #222632;
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --radius-lg: 16px;
-      --radius-sm: 10px;
-      --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
-      --success: #4ade80;
-      --warning: #facc15;
-    }
+  :root {
+    --bg: #05070a;
+    --card: #10131a;
+    --card-soft: #151924;
+    --accent: #4da3ff;
+    --accent-soft: rgba(77,163,255,0.18);
+    --border: #222632;
+    --text: #f9fafb;
+    --muted: #9ca3af;
+    --radius-lg: 16px;
+    --radius-sm: 10px;
+    --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    /* Badge colors */
+    --badge-on-bg: rgba(34,197,94,0.15);
+    --badge-on-border: rgba(34,197,94,0.7);
+    --badge-on-text: #bbf7d0;
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: radial-gradient(circle at top, #151927 0, #05070a 46%);
-      color: var(--text);
-    }
+    --badge-off-bg: rgba(148,163,184,0.12);
+    --badge-off-border: rgba(148,163,184,0.5);
+    --badge-off-text: #9ca3af;
 
-    .app { min-height: 100vh; display: flex; flex-direction: column; }
+    --danger-bg: rgba(248,113,113,0.1);
+    --danger-border: rgba(248,113,113,0.7);
+    --danger-text: #fecaca;
+  }
 
-    .app-header {
-      padding: 16px 18px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      background: linear-gradient(to bottom, rgba(5,7,10,0.97), rgba(5,7,10,0.85) 65%, transparent);
-      backdrop-filter: blur(12px);
-    }
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    .app-title-block { display: flex; flex-direction: column; gap: 2px; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(circle at top, #151927 0, #05070a 46%);
+    color: var(--text);
+  }
 
-    .app-title { font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+  .app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .app-subtitle { font-size: 12px; color: var(--muted); }
+  .app-header {
+    padding: 16px 18px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: linear-gradient(to bottom, rgba(5,7,10,0.97), rgba(5,7,10,0.9) 65%, transparent);
+    backdrop-filter: blur(12px);
+  }
 
-    .pill {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.25);
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(15,23,42,0.7);
-    }
+  .header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
 
-    .pill-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 5px rgba(34,197,94,0.25);
-    }
+  .app-title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
 
-    .app-main {
-      flex: 1;
-      padding: 0 16px 90px;
-      max-width: 520px;
-      width: 100%;
-      margin: 0 auto;
-    }
+  .app-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
 
-    .card {
-      background: radial-gradient(circle at top left, rgba(77,163,255,0.08), rgba(15,23,42,0.65), #05070a);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(15,23,42,0.9);
-      box-shadow: var(--shadow-soft);
-      padding: 14px 14px 12px;
-      margin-bottom: 14px;
-    }
+  .app-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+  }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
-      gap: 8px;
-    }
+  .pill {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.25);
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15,23,42,0.7);
+    white-space: nowrap;
+  }
 
-    .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
+  .pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 5px rgba(34,197,94,0.25);
+  }
 
-    .card-subtitle {
-      font-size: 11px;
-      color: var(--muted);
-    }
+  .search-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
 
-    /* Search bar */
-    .search-wrap { margin-top: 4px; }
+  .search-input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(15,23,42,0.9);
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+  }
 
-    .search-input {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
-      color: var(--text);
-      font-size: 14px;
-    }
+  .search-input::placeholder {
+    color: rgba(148,163,184,0.9);
+  }
 
-    .search-input::placeholder { color: #6b7280; }
+  .filter-pill {
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.35);
+    color: var(--muted);
+    background: rgba(15,23,42,0.9);
+    cursor: pointer;
+    white-space: nowrap;
+  }
 
-    .search-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-      background: rgba(15,23,42,0.95);
-    }
+  .filter-pill-active {
+    border-color: var(--accent);
+    color: #bfdbfe;
+    background: rgba(37,99,235,0.16);
+  }
 
-    .search-meta {
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--muted);
-    }
+  .app-main {
+    flex: 1;
+    padding: 8px 16px 90px;
+    max-width: 520px;
+    width: 100%;
+    margin: 0 auto;
+  }
 
-    /* To-Do List */
-    .order-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin: 6px 4px 8px;
+  }
 
-    .order-empty {
-      font-size: 12px;
-      color: var(--muted);
-    }
+  .list-empty {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    padding: 30px 16px;
+  }
 
-    .order-card {
-      border-radius: 14px;
-      border: 1px solid rgba(31,41,55,0.9);
-      background: rgba(15,23,42,0.98);
-      padding: 10px 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+  .list-empty strong {
+    color: #e5e7eb;
+  }
 
-    .order-header-main {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
+  .card {
+    background: radial-gradient(circle at top left, rgba(77,163,255,0.09) 0, rgba(15,23,42,0.9) 26%, #05070a 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(15,23,42,0.9);
+    box-shadow: var(--shadow-soft);
+    padding: 12px 12px 10px;
+    margin-bottom: 10px;
+  }
 
-    .order-name { font-size: 14px; font-weight: 600; }
+  .card-header-row {
+    display: block;
+    margin-bottom: 6px;
+  }
 
-    .order-phone { font-size: 11px; color: var(--muted); }
+  .card-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
 
-    .order-due-pill {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.35);
-      background: rgba(15,23,42,0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
+  .card-name {
+    font-size: 15px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
-    .due-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
+  .badge-inline {
+    display: flex;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
 
-    .due-date { font-weight: 500; }
+  /* NEW CLEAN BADGE SYSTEM */
+  .status-badge {
+    font-size: 11px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    border-width: 1px;
+    border-style: solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
 
-    .status-badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 4px;
-    }
+  .status-badge.on {
+    background: var(--badge-on-bg);
+    border-color: var(--badge-on-border);
+    color: var(--badge-on-text);
+  }
 
-    .status-badge {
-      font-size: 10px;
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(75,85,99,0.9);
-      background: #020617;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      user-select: none;
-    }
+  .status-badge.off {
+    background: var(--badge-off-bg);
+    border-color: var(--badge-off-border);
+    color: var(--badge-off-text);
+  }
 
-    .status-badge.on {
-      border-color: rgba(74,222,128,0.9);
-      color: var(--success);
-      background: rgba(22,163,74,0.12);
-    }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.9;
+  }
 
-    .status-badge.off {
-      border-color: rgba(148,163,184,0.7);
-      color: #9ca3af;
-      background: rgba(15,23,42,0.9);
-    }
+  .card-phone {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
 
-    .order-body { font-size: 12px; color: var(--muted); }
+  .card-tag-col {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
 
-    .order-body strong { color: var(--text); font-weight: 500; }
+  .chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.35);
+    color: var(--muted);
+    background: rgba(15,23,42,0.9);
+    white-space: nowrap;
+  }
 
-    .order-meta-row { font-size: 11px; color: var(--muted); }
+  .chip-type {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+  }
 
-    /* Action buttons */
-    .card-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      margin-top: 6px;
-    }
+  .chip-due {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
 
-    .btn-small {
-      flex: 1;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(75,85,99,0.9);
-      background: #020617;
-      color: #e5e7eb;
-      font-size: 11px;
-      font-weight: 500;
-      text-align: center;
-      cursor: pointer;
-    }
+  .chip-due-late {
+    border-color: var(--danger-border);
+    color: var(--danger-text);
+    background: var(--danger-bg);
+  }
 
-    .btn-small.primary {
-      border-color: var(--accent);
-      background: linear-gradient(to bottom right, #60a5fa, #2563eb);
-      color: white;
-    }
+  .chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
 
-    .btn-small:active {
-      transform: translateY(1px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.6);
-    }
+  .card-body {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
 
-    /* Footer */
-    .app-footer {
-      position: sticky;
-      bottom: 0;
-      background: rgba(5,7,10,0.97);
-      padding-top: 6px;
-    }
+  .item-desc {
+    margin-bottom: 6px;
+    color: #e5e7eb;
+  }
 
-    .footer-inner {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 0 16px 10px;
-    }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
 
-    .bottom-nav { border-top: 1px solid #2d3543; padding-top: 6px; }
-    .bottom-nav-row { display: flex; justify-content: space-between; }
+  .meta-pill {
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(31,41,55,0.9);
+    background: rgba(15,23,42,0.9);
+  }
 
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      font-size: 10px;
-      color: var(--muted);
-      padding: 6px 0;
-    }
+  .card-footer-row {
+    margin-top: 10px;
+  }
 
-    .nav-item-active { color: #e5e7eb; }
+  .btn-row {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
 
-    .nav-icon {
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      border: 1px solid #4b5563;
-      display: flex; justify-content: center; align-items: center;
-      margin: 0 auto 2px;
-    }
+  .btn-wide {
+    flex: 1;
+    text-align: center;
+  }
 
-    .nav-item-active .nav-icon {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
-    }
+  .btn-ghost {
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148,163,184,0.55);
+    background: rgba(15,23,42,0.9);
+    color: #e5e7eb;
+    cursor: pointer;
+    white-space: nowrap;
+  }
 
-    /* Modal for Make Appt */
+  .btn-ghost-danger {
+    border-color: var(--danger-border);
+    color: var(--danger-text);
+    background: var(--danger-bg);
+  }
+
+  .loading-bar {
+    height: 2px;
+    width: 100%;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(15,23,42,0.95);
+    margin-top: 4px;
+    display: none;
+  }
+
+  .loading-bar-inner {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(to right, #60a5fa, #2563eb);
+    animation: loadingBar 1s infinite linear;
+  }
+
+  @keyframes loadingBar {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
+  .error-banner {
+    display: none;
+    margin-top: 6px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    background: rgba(248,113,113,0.14);
+    border: 1px solid rgba(248,113,113,0.7);
+    color: #fecaca;
+  }
+
+  /* Bottom Navigation */
+  .app-footer {
+    position: sticky;
+    bottom: 0;
+    background: #0c0f16;
+    padding: 8px 0 4px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+  }
+
+  .footer-inner {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 12px 6px;
+  }
+
+  .bottom-nav {
+    width: 100%;
+  }
+
+  .bottom-nav-row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .nav-item {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0 6px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-radius: 10px;
+    transition: 0.25s ease;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .nav-item-active {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .nav-icon {
+    width: 28px;
+    height: 28px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    transition: 0.25s ease;
+  }
+
+  .nav-item-active .nav-icon {
+    border-color: var(--accent);
+    background: rgba(77,163,255,0.12);
+    box-shadow: 0 0 8px rgba(77,163,255,0.4);
+  }
+
+  @media (min-width: 540px) {
+    .app-header { padding-inline: 22px; }
+    .app-main { padding-inline: 22px; }
+    .footer-inner { padding-inline: 22px; }
+  }
+
+  /* Global typography tuning */
+body {
+  font-size: 15px;          /* was 13–14 depending on element */
+  line-height: 1.25;        /* slight spacing boost */
+  letter-spacing: 0.01em;   /* subtle text breathing room */
+}
+
+/* Make card text slightly bigger */
+.card-body,
+.item-desc,
+.card-phone,
+.meta-row,
+.meta-pill {
+  font-size: 14px;
+  line-height: 1.28;
+}
+
+/* Increase name + header readability */
+.card-name {
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+/* Buttons slightly bigger text */
+.btn-ghost,
+.btn-ghost-danger {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+/* Badges slightly larger and readable */
+.status-badge {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+    /* --- Appointment Modal --- */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.88);
-      backdrop-filter: blur(10px);
+      background: rgba(15,23,42,0.82);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 40;
     }
 
     .modal-backdrop.show {
@@ -321,28 +511,22 @@
       width: 100%;
       max-width: 420px;
       background: #020617;
-      border-radius: 18px;
-      border: 1px solid rgba(148,163,184,0.35);
-      box-shadow: 0 24px 60px rgba(0,0,0,0.85);
-      padding: 14px 16px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 12px;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .modal-title {
       font-size: 15px;
       font-weight: 600;
-    }
-
-    .modal-subtitle {
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
     }
 
     .modal-close {
@@ -353,576 +537,630 @@
       cursor: pointer;
     }
 
-    .field {
+    .modal-body {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 10px;
     }
 
-    .field-label {
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .modal-field-label {
       font-size: 11px;
-      font-weight: 500;
       color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
-    .field-input,
-    .field-select {
+    .modal-field-input {
       width: 100%;
-      padding: 9px 10px;
+      padding: 8px 9px;
       border-radius: 10px;
       border: 1px solid var(--border);
-      background: rgba(15,23,42,0.95);
+      background: rgba(15,23,42,0.9);
       color: var(--text);
-      font-size: 14px;
-    }
-
-    .field-input:focus,
-    .field-select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent-soft);
+      font-size: 13px;
       outline: none;
     }
 
-    .modal-actions {
+    .modal-field-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .modal-footer {
       display: flex;
+      justify-content: flex-end;
       gap: 8px;
-      margin-top: 10px;
     }
 
-    .btn-outline {
-      flex: 1;
-      padding: 9px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.7);
-      background: transparent;
+    .btn-primary-modal {
+      border-color: var(--accent);
       color: #e5e7eb;
-      font-size: 13px;
-      cursor: pointer;
-      text-align: center;
     }
 
-    .btn-primary-lg {
-      flex: 1;
-      padding: 9px 10px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(to bottom right, #60a5fa, #2563eb);
-      color: #fff;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-    }
 
-    .bottom-nav { border-top: 1px solid #2d3543; padding-top: 6px; }
-.bottom-nav-row { display: flex; justify-content: space-between; }
+</style>
 
-.nav-item {
-  flex: 1;
-  display: flex;              /* make the whole thing clickable */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  text-align: center;
-  font-size: 10px;
-  color: var(--muted);
-  padding: 6px 0;
-  text-decoration: none;      /* remove blue underline */
-}
-
-.nav-item-active { color: #e5e7eb; }
-
-.nav-icon {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  border: 1px solid #4b5563;
-  display: flex; justify-content: center; align-items: center;
-  margin: 0 auto 2px;
-}
-
-.nav-item-active .nav-icon {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-soft);
-}
-
-
-  </style>
+   
 </head>
+
 <body>
   <div class="app">
-
     <header class="app-header">
-      <div class="app-title-block">
-        <div class="app-title">To-Do’s</div>
-        <div class="app-subtitle">All active shop work — orders + services</div>
+      <div class="header-top-row">
+        <div class="app-title-block">
+          <div class="app-title">To-Do Queue</div>
+          <div class="app-subtitle">Open orders & services from all sheets.</div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          Live from Sheets
+        </div>
       </div>
-      <div class="pill">
-        <span class="pill-dot"></span>
-        Live queue
+
+      <div class="search-row">
+        <input id="searchInput" type="text" class="search-input" placeholder="Search by name, phone, item..." />
+        <button id="filterOpenBtn" class="filter-pill filter-pill-active" type="button">
+          Open Only
+        </button>
+      </div>
+
+      <div class="loading-bar" id="loadingBar">
+        <div class="loading-bar-inner"></div>
+      </div>
+      <div class="error-banner" id="errorBanner">
+        Could not load data from the server. Check the web app URL or deployment.
       </div>
     </header>
 
     <main class="app-main">
-
-      <!-- SEARCH CARD -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Search To-Do’s</div>
-            <div class="card-subtitle">Search by name, number, item, location, dates, staff…</div>
-          </div>
-        </div>
-        <div class="search-wrap">
-          <input
-            id="todoSearch"
-            class="search-input"
-            type="text"
-            placeholder="Start typing a name, phone, or item…"
-          />
-          <div class="search-meta" id="searchMeta">Loading items…</div>
-        </div>
-      </section>
-
-      <!-- TO-DO LIST CARD -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Active To-Do’s</div>
-            <div class="card-subtitle" id="listSubtitle">Newest first • All locations</div>
-          </div>
-        </div>
-
-        <div id="orderList" class="order-list">
-          <!-- Populated by JS -->
-        </div>
-      </section>
-
+      <div class="section-label">Today’s work</div>
+      <div id="todoList"></div>
     </main>
 
     <footer class="app-footer">
-  <div class="footer-inner">
-    <nav class="bottom-nav">
-      <div class="bottom-nav-row">
+      <div class="footer-inner">
+        <nav class="bottom-nav">
+          <div class="bottom-nav-row">
 
-        <a href="orderPage.html" class="nav-item">
-          <div class="nav-icon">🧾</div>
-          Orders
-        </a>
+            <a href="orderPage.html" class="nav-item">
+              <div class="nav-icon">🧾</div>
+              Orders
+            </a>
 
-        <a href="servicePage.html" class="nav-item">
-          <div class="nav-icon">🛠️</div>
-          Services
-        </a>
+            <a href="servicePage.html" class="nav-item">
+              <div class="nav-icon">🛠️</div>
+              Services
+            </a>
 
-        <a href="index.html" class="nav-item">
-          <div class="nav-icon">📋</div>
-          To-Do's
-        </a>
+            <a href="index.html" class="nav-item nav-item-active">
+              <div class="nav-icon">📋</div>
+              To-Do's
+            </a>
 
-        <a href="appPage.html" class="nav-item">
-          <div class="nav-icon">📅</div>
-          Appts
-        </a>
+            <a href="appPage.html" class="nav-item">
+              <div the="nav-icon">📅</div>
+              Appts
+            </a>
 
+          </div>
+        </nav>
       </div>
-    </nav>
-  </div>
-</footer>
-
-    
-    
-    
-
+    </footer>
   </div>
 
-  <!-- Make Appointment Modal -->
-  <div id="apptModalBackdrop" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Schedule Appointment</div>
-        <button class="modal-close" id="apptModalCloseBtn">&times;</button>
-      </div>
-      <div class="modal-subtitle">Create an appointment from this To-Do item.</div>
+    <!-- Appointment Modal -->
+    <div id="apptModal" class="modal-backdrop" aria-hidden="true">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="modal-title">Schedule Appointment</div>
+          <button type="button" class="modal-close" id="apptClose">✕</button>
+        </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptName">Customer Name</label>
-        <input id="modalApptName" type="text" class="field-input" />
-      </div>
+        <div class="modal-body">
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptName">Name</label>
+            <input id="apptName" type="text" class="modal-field-input" />
+          </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptPhone">Phone Number</label>
-        <input id="modalApptPhone" type="text" class="field-input" />
-      </div>
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptPhone">Phone Number</label>
+            <input id="apptPhone" type="tel" class="modal-field-input" />
+          </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptService">Service / Item</label>
-        <input id="modalApptService" type="text" class="field-input" />
-      </div>
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptService">Service</label>
+            <input id="apptService" type="text" class="modal-field-input" />
+          </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptDate">Date</label>
-        <input id="modalApptDate" type="date" class="field-input" />
-      </div>
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptLocation">Location</label>
+            <input id="apptLocation" type="text" class="modal-field-input" />
+          </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptLocation">Location</label>
-        <select id="modalApptLocation" class="field-select">
-          <option value="">Select location</option>
-          <option value="Valley Lanes">Valley Lanes</option>
-          <option value="Idle Hours South">Idle Hours South</option>
-        </select>
-      </div>
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptDate">Appt Date</label>
+            <input id="apptDate" type="date" class="modal-field-input" />
+          </div>
 
-      <div class="field">
-        <label class="field-label" for="modalApptTime">Time</label>
-        <select id="modalApptTime" class="field-select">
-          <option value="">Select time</option>
-          <option>6:00 PM</option>
-          <option>6:15 PM</option>
-          <option>6:30 PM</option>
-          <option>6:45 PM</option>
-          <option>7:00 PM</option>
-          <option>7:15 PM</option>
-          <option>7:30 PM</option>
-          <option>7:45 PM</option>
-          <option>8:00 PM</option>
-          <option>8:15 PM</option>
-          <option>8:30 PM</option>
-          <option>8:45 PM</option>
-          <option>9:00 PM</option>
-        </select>
-      </div>
+          <div class="modal-field">
+            <label class="modal-field-label" for="apptTime">Appt Time</label>
+            <input id="apptTime" type="text" class="modal-field-input" placeholder="7:00 PM" />
+          </div>
+        </div>
 
-      <div class="modal-actions">
-        <button class="btn-outline" type="button" id="apptModalCancelBtn">Cancel</button>
-        <button class="btn-primary-lg" type="button" id="apptModalSaveBtn">Save Appointment</button>
+        <div class="modal-footer">
+          <button type="button" class="btn-ghost" id="apptCancel">Cancel</button>
+          <button type="button" class="btn-ghost btn-primary-modal" id="apptSave">
+            Save Appointment
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+
+
+  <!-- SCRIPT BELOW -->
 
   <script>
-    // 🔗 To-Do web app URL (for reading + flag updates)
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSbKxv1vHtfpFj23VZ7OcAh6Ea8t8k-gkyA9zIS-ckpV9V8tojMt_vCpaPd-95Uk8t/exec';
+  // 🔗 Your deployed Apps Script web app URL ( /exec )
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwYk8Hij1VKlqZWmG-jUdVhUNu6CQrPAnt0UH9MWNTpOuHvT0JZ_9zoS4ikVzNWEMva/exec';
 
-    // 🔗 Appointment web app URL (same as your main appointment page)
-    const APPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxpLY1EXauimDjj5eymprO4QjHIZgvy4I6_Ug-i8deC3UWgi1vH3PRoIuANALQmZyJDlQ/exec';
+  let ALL_ITEMS = [];
+  let SHOW_OPEN_ONLY = true;
+  let LAST_SEARCH = '';
+    let CURRENT_APPT_ITEM = null;
 
-    let ALL_ITEMS = [];
-    let LAST_QUERY = '';
-    let CURRENT_APPT_ITEM = null; // the item we’re making an appt for
 
-    function renderTodos(filterText = '') {
-      const listEl = document.getElementById('orderList');
-      const searchMeta = document.getElementById('searchMeta');
-      const query = filterText.trim().toLowerCase();
-      LAST_QUERY = filterText;
+  function normalizeBool(val) {
+    const s = (val || '').toString().trim().toUpperCase();
+    return s === 'Y' || s === 'YES' || s === 'TRUE' || s === '1';
+  }
 
-      listEl.innerHTML = '';
+  function parseDate(val) {
+    if (!val) return null;
+    const parts = val.split('/');
+    if (parts.length === 3) {
+      const m = parseInt(parts[0], 10) - 1;
+      const d = parseInt(parts[1], 10);
+      const y = parseInt(parts[2], 10);
+      const dt = new Date(y, m, d);
+      return isNaN(dt.getTime()) ? null : dt;
+    }
+    const dt = new Date(val);
+    return isNaN(dt.getTime()) ? null : dt;
+  }
 
-      if (!ALL_ITEMS.length) {
-        searchMeta.textContent = 'No items loaded.';
-        const empty = document.createElement('div');
-        empty.className = 'order-empty';
-        empty.textContent = 'Nothing in the To-Do sheet yet.';
-        listEl.appendChild(empty);
-        return;
-      }
+    function formatDateDisplay(val) {
+    if (!val) return '';
+    const d = parseDate(val);
+    if (!d) return (val || '').toString();   // fallback if it's some weird text
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+  }
 
-      const filtered = ALL_ITEMS.filter(item => {
-        if (!query) return true;
-        const haystack = [
-          item.name,
-          item.phone,
-          item.itemDescription,
-          item.location,
-          item.orderDue,
-          item.orderDate,
-          item.staffMember
-        ].join(' ').toLowerCase();
-        return haystack.includes(query);
-      });
 
-      if (!query) {
-        searchMeta.textContent = `Showing all items (${filtered.length})`;
-      } else {
-        searchMeta.textContent = `Showing ${filtered.length} match${filtered.length === 1 ? '' : 'es'} for “${filterText}”`;
-      }
+  function isOverdue(dateStr) {
+    const d = parseDate(dateStr);
+    if (!d) return false;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    d.setHours(0,0,0,0);
+    return d < today;
+  }
 
-      if (!filtered.length) {
-        const empty = document.createElement('div');
-        empty.className = 'order-empty';
-        empty.textContent = 'No items match your search.';
-        listEl.appendChild(empty);
-        return;
-      }
+  function setLoading(isLoading) {
+    const bar = document.getElementById('loadingBar');
+    if (!bar) return;
+    bar.style.display = isLoading ? 'block' : 'none';
+  }
 
-      filtered.forEach(item => {
-        const paid      = (item.customerPaid   || '').toUpperCase() === 'Y';
-        const completed = (item.completed      || '').toUpperCase() === 'Y';
-        const called    = (item.hasBeenCalled  || '').toUpperCase() === 'Y';
+  function showError(show) {
+    const el = document.getElementById('errorBanner');
+    if (!el) return;
+    el.style.display = show ? 'block' : 'none';
+  }
 
-        const card = document.createElement('div');
-        card.className = 'order-card';
-        card.dataset.id = item.id || '';
+  async function loadTodosFromServer() {
+    setLoading(true);
+    showError(false);
 
-        const headerMain = document.createElement('div');
-        headerMain.className = 'order-header-main';
-        headerMain.innerHTML = `
-          <div>
-            <div class="order-name">${item.name || 'Unknown'}</div>
-            <div class="order-phone">${item.phone || ''}</div>
-          </div>
-          <div class="order-due-pill">
-            <span class="due-label">Due</span>
-            <span class="due-date">${item.orderDue || '-'}</span>
-          </div>
-        `;
-        card.appendChild(headerMain);
+    try {
+      const res = await fetch(WEB_APP_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
 
-        const badgeRow = document.createElement('div');
-        badgeRow.className = 'status-badge-row';
+      // Support either {items:[...]} or {success:true, items:[...]}
+      ALL_ITEMS = (data && data.items) ? data.items : [];
 
-        const paidBadge = document.createElement('span');
-        paidBadge.className = 'status-badge ' + (paid ? 'on' : 'off');
-        paidBadge.dataset.type = 'paid';
-        paidBadge.textContent = paid ? 'Paid' : 'Unpaid';
-        badgeRow.appendChild(paidBadge);
+      renderTodos();
+    } catch (err) {
+      console.error('Failed to load todos:', err);
+      showError(true);
+      ALL_ITEMS = [];
+      renderTodos();
+    } finally {
+      setLoading(false);
+    }
+  }
 
-        const completeBadge = document.createElement('span');
-        completeBadge.className = 'status-badge ' + (completed ? 'on' : 'off');
-        completeBadge.dataset.type = 'completed';
-        completeBadge.textContent = completed ? 'Complete' : 'Incomplete';
-        badgeRow.appendChild(completeBadge);
+  function applyFilters() {
+    let list = [...ALL_ITEMS];
 
-        const calledBadge = document.createElement('span');
-        calledBadge.className = 'status-badge ' + (called ? 'on' : 'off');
-        calledBadge.dataset.type = 'called';
-        calledBadge.textContent = called ? 'Called' : 'Not Called';
-        badgeRow.appendChild(calledBadge);
-
-        card.appendChild(badgeRow);
-
-        const body = document.createElement('div');
-        body.className = 'order-body';
-        body.innerHTML = `
-          <strong>${item.itemDescription || ''}</strong><br>
-          ${item.location || ''}${item.orderDate ? ' • Ordered ' + item.orderDate : ''}
-        `;
-        card.appendChild(body);
-
-        const metaRow = document.createElement('div');
-        metaRow.className = 'order-meta-row';
-        metaRow.textContent = `Staff: ${item.staffMember || '—'}`;
-        card.appendChild(metaRow);
-
-        const actions = document.createElement('div');
-        actions.className = 'card-actions';
-        actions.innerHTML = `
-          <button class="btn-small" data-action="edit">Edit</button>
-          <button class="btn-small" data-action="appt">Make Appt</button>
-          <button class="btn-small primary" data-action="out">Mark Out The Door</button>
-        `;
-        card.appendChild(actions);
-
-        listEl.appendChild(card);
+    const search = LAST_SEARCH.trim().toLowerCase();
+    if (search) {
+      list = list.filter(item => {
+        const name  = (item.name || '').toLowerCase();
+        const phone = (item.phone || '').toLowerCase();
+        const desc  = (item.itemDescription || '').toLowerCase();
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          desc.includes(search)
+        );
       });
     }
 
-    async function loadTodosFromServer() {
-      const searchMeta = document.getElementById('searchMeta');
-      const listEl = document.getElementById('orderList');
-
-      if (!WEB_APP_URL || !WEB_APP_URL.startsWith('https://')) {
-        searchMeta.textContent = 'Web app URL not set.';
-        listEl.innerHTML = '<div class="order-empty">Set WEB_APP_URL in the script tag.</div>';
-        return;
-      }
-
-      searchMeta.textContent = 'Loading items…';
-
-      try {
-        const res = await fetch(WEB_APP_URL);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        if (!data.success) throw new Error(data.error || 'Unknown server error');
-
-        ALL_ITEMS = data.items || [];
-        renderTodos(LAST_QUERY);
-      } catch (err) {
-        console.error(err);
-        searchMeta.textContent = 'Failed to load items.';
-        listEl.innerHTML = '<div class="order-empty">Error loading To-Do list.</div>';
-      }
+    if (SHOW_OPEN_ONLY) {
+      list = list.filter(item => {
+        const out = normalizeBool(item.orderOutTheDoor);
+        const completed = normalizeBool(item.completed);
+        return !(out || completed);
+      });
     }
 
-    function updateLocalItemFlag(id, fieldKey, value) {
-      const item = ALL_ITEMS.find(i => (i.id || '').toString() === id);
-      if (!item) return;
-      if (fieldKey === 'paid')      item.customerPaid    = value;
-      if (fieldKey === 'out')       item.orderOutTheDoor = value;
-      if (fieldKey === 'called')    item.hasBeenCalled   = value;
-      if (fieldKey === 'completed') item.completed       = value;
+    return list;
+  }
+
+  function renderTodos() {
+    const container = document.getElementById('todoList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const items = applyFilters();
+
+    if (!items.length) {
+      const div = document.createElement('div');
+      div.className = 'list-empty';
+      div.innerHTML = `
+        <strong>No matching items.</strong><br/>
+        Adjust filters or check if any orders/services are open.
+      `;
+      container.appendChild(div);
+      return;
     }
 
-    function sendFlagUpdate(id, fieldKey, value) {
-      if (!WEB_APP_URL || !WEB_APP_URL.startsWith('https://')) return;
-      fetch(WEB_APP_URL, {
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.id = item.id || '';
+      card.dataset.sourceSheet = item.sourceSheet || '';
+
+      const sourceName = (item.sourceSheet || '').toLowerCase();
+      const isService = sourceName === 'service tracker';
+
+      const paid      = normalizeBool(item.customerPaid);
+      const out       = normalizeBool(item.orderOutTheDoor);
+      const called    = normalizeBool(item.hasBeenCalled);
+      const completed = normalizeBool(item.completed);
+
+      const overdue = isOverdue(item.orderDue);
+
+            const name     = item.name || 'Unknown';
+      const phone    = item.phone || '';
+      const desc     = item.itemDescription || (isService ? 'Service' : 'Order');
+      const loc      = item.location || '';
+
+      const dueRaw   = item.orderDue || '';
+      const dateRaw  = item.orderDate || '';
+      const due      = formatDateDisplay(dueRaw);
+      const date     = formatDateDisplay(dateRaw);
+
+      const staff    = item.staffMember || '';
+
+      const sourceLabel = isService ? 'Service' : 'Order';
+
+      card.innerHTML = `
+        <div class="card-header-row">
+          <div class="card-title-block">
+
+            <div class="card-name-row">
+              <div class="card-name">${name}</div>
+
+              <div class="badge-inline">
+                <span class="status-badge ${paid ? 'on' : 'off'}" data-type="paid">
+                  <span class="status-dot"></span>
+                  ${paid ? 'Paid' : 'Unpaid'}
+                </span>
+
+                ${isService ? `
+                <span class="status-badge ${completed ? 'on' : 'off'}" data-type="completed">
+                  <span class="status-dot"></span>
+                  ${completed ? 'Completed' : 'Not Completed'}
+                </span>
+                ` : ''}
+
+                <span class="status-badge ${called ? 'on' : 'off'}" data-type="called">
+                  <span class="status-dot"></span>
+                  ${called ? 'Called' : 'Not Called'}
+                </span>
+              </div>
+            </div>
+
+            <div class="card-phone">${phone}</div>
+
+            <div class="card-tag-col">
+              <span class="chip chip-type">${sourceLabel}</span>
+              <span class="chip chip-due ${overdue && !completed ? 'chip-due-late' : ''}">
+                <span class="chip-dot"></span>
+                ${due ? `Due ${due}` : 'No due date'}
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="item-desc">${desc}</div>
+          <div class="meta-row">
+            ${loc ? `<span class="meta-pill">📍 ${loc}</span>` : ''}
+            ${date ? `<span class="meta-pill">🕒 ${date}</span>` : ''}
+            ${staff ? `<span class="meta-pill">👤 ${staff}</span>` : ''}
+          </div>
+        </div>
+
+        <div class="card-footer-row">
+          <div class="btn-row">
+            <button class="btn-ghost btn-wide" type="button" data-action="edit">
+              Edit
+            </button>
+            <button class="btn-ghost btn-wide" type="button" data-action="schedule">
+              Schedule Apt
+            </button>
+            <button class="btn-ghost btn-ghost-danger btn-wide" type="button" data-action="pickedUp">
+              Picked Up
+            </button>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+  function updateLocalItemFlag(id, fieldKey, value) {
+    for (let i = 0; i < ALL_ITEMS.length; i++) {
+      if ((ALL_ITEMS[i].id || '').toString() === id.toString()) {
+
+        if (fieldKey === 'paid') {
+          ALL_ITEMS[i].customerPaid = value;
+        } else if (fieldKey === 'called') {
+          ALL_ITEMS[i].hasBeenCalled = value;
+        } else if (fieldKey === 'completed') {
+          ALL_ITEMS[i].completed = value;
+        } else if (fieldKey === 'out') {
+          ALL_ITEMS[i].orderOutTheDoor = value;
+        }
+
+        break;
+      }
+    }
+  }
+
+  async function sendFlagUpdate(id, fieldKey, value) {
+    try {
+      await fetch(WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
         body: JSON.stringify({
           action: 'updateFlag',
           id,
           fieldKey,
           value
         })
-      }).catch(err => console.error('Flag update error:', err));
+      });
+    } catch (err) {
+      console.error('Failed to update flag:', err);
+    }
+  }
+
+  function handleBadgeClick(badgeEl) {
+    const card = badgeEl.closest('.card');
+    if (!card) return;
+
+    const id = card.dataset.id;
+    if (!id) return;
+
+    const fieldKey = badgeEl.dataset.type;
+    if (!fieldKey) return;
+
+    const isOn = badgeEl.classList.contains('on');
+    const newVal = isOn ? 'N' : 'Y';
+
+    // Toggle classes
+    badgeEl.classList.toggle('on', !isOn);
+    badgeEl.classList.toggle('off', isOn);
+
+    // Update label text
+    if (fieldKey === 'paid') {
+      badgeEl.innerHTML = `<span class="status-dot"></span>${!isOn ? 'Paid' : 'Unpaid'}`;
+    } else if (fieldKey === 'completed') {
+      badgeEl.innerHTML = `<span class="status-dot"></span>${!isOn ? 'Completed' : 'Not Completed'}`;
+    } else if (fieldKey === 'called') {
+      badgeEl.innerHTML = `<span class="status-dot"></span>${!isOn ? 'Called' : 'Not Called'}`;
     }
 
-    function openApptModal(item) {
-      CURRENT_APPT_ITEM = item || null;
-      const backdrop = document.getElementById('apptModalBackdrop');
+    updateLocalItemFlag(id, fieldKey, newVal);
+    sendFlagUpdate(id, fieldKey, newVal);
+  }
 
-      document.getElementById('modalApptName').value    = item?.name || '';
-      document.getElementById('modalApptPhone').value   = item?.phone || '';
-      document.getElementById('modalApptService').value = item?.itemDescription || '';
+  function handleButtonClick(btnEl) {
+    const action = btnEl.dataset.action;
+    const card = btnEl.closest('.card');
+    if (!card) return;
 
-      // Clear date/time/location each time
-      document.getElementById('modalApptDate').value     = '';
-      document.getElementById('modalApptLocation').value = '';
-      document.getElementById('modalApptTime').value     = '';
+    const id = card.dataset.id;
+    if (!id) return;
 
-      backdrop.classList.add('show');
-    }
+    if (action === 'pickedUp') {
+      // Mark this item as "Out The Door"
+      const newVal = 'Y';
 
-    function closeApptModal() {
-      const backdrop = document.getElementById('apptModalBackdrop');
-      backdrop.classList.remove('show');
-      CURRENT_APPT_ITEM = null;
-    }
+      updateLocalItemFlag(id, 'out', newVal);
+      sendFlagUpdate(id, 'out', newVal);
 
-    async function handleApptSave() {
-      if (!APPT_WEB_APP_URL || !APPT_WEB_APP_URL.startsWith('https://')) {
-        alert('Appointment web app URL not set.');
-        return;
+      // Re-render so it's removed when showing Open Only
+      renderTodos();
+
+    } else if (action === 'schedule') {
+      const item = findItemById(id);
+      if (item) {
+        openApptModal(item);
       }
+    } else if (action === 'edit') {
+      alert('Edit: open the sheet or add a modal here.');
+    }
+  }
 
-      const name     = document.getElementById('modalApptName').value.trim();
-      const phone    = document.getElementById('modalApptPhone').value.trim();
-      const service  = document.getElementById('modalApptService').value.trim();
-      const apptDate = document.getElementById('modalApptDate').value; // YYYY-MM-DD
-      const location = document.getElementById('modalApptLocation').value;
-      const apptTime = document.getElementById('modalApptTime').value;
+    function findItemById(id) {
+    return ALL_ITEMS.find(it => (it.id || '').toString() === (id || '').toString());
+  }
 
-      if (!name || !phone || !service || !apptDate || !location || !apptTime) {
-        alert('Please fill in all fields before saving the appointment.');
-        return;
-      }
+  function openApptModal(item) {
+    CURRENT_APPT_ITEM = item || null;
+    const modal = document.getElementById('apptModal');
+    if (!modal || !item) return;
 
-      const payload = { name, phone, service, apptDate, location, apptTime };
+    // Pre-fill from the card data
+    document.getElementById('apptName').value     = item.name || '';
+    document.getElementById('apptPhone').value    = item.phone || '';
+    document.getElementById('apptService').value  = item.itemDescription || '';
+    document.getElementById('apptLocation').value = item.location || '';
 
-      try {
-        await fetch(APPT_WEB_APP_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
+    document.getElementById('apptDate').value = '';
+    document.getElementById('apptTime').value = '';
 
-        alert('Appointment saved!');
-        closeApptModal();
-      } catch (err) {
-        console.error(err);
-        alert('Failed to save appointment: ' + err.message);
-      }
+    modal.classList.add('show');
+  }
+
+  function closeApptModal() {
+    const modal = document.getElementById('apptModal');
+    if (!modal) return;
+    modal.classList.remove('show');
+    CURRENT_APPT_ITEM = null;
+  }
+
+  async function saveAppointment() {
+    if (!CURRENT_APPT_ITEM) {
+      closeApptModal();
+      return;
     }
 
-    function setupInteractions() {
-      const listEl = document.getElementById('orderList');
-      const searchInput = document.getElementById('todoSearch');
+    const name     = document.getElementById('apptName').value.trim()     || CURRENT_APPT_ITEM.name || '';
+    const phone    = document.getElementById('apptPhone').value.trim()    || CURRENT_APPT_ITEM.phone || '';
+    const service  = document.getElementById('apptService').value.trim()  || CURRENT_APPT_ITEM.itemDescription || '';
+    const location = document.getElementById('apptLocation').value.trim() || CURRENT_APPT_ITEM.location || '';
+    const apptDate = document.getElementById('apptDate').value;
+    const apptTime = document.getElementById('apptTime').value.trim();
 
-      searchInput.addEventListener('input', e => {
-        renderTodos(e.target.value);
+    try {
+      await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify({
+          action: 'createAppointment',
+          name,
+          phone,
+          service,
+          location,
+          apptDate,
+          apptTime
+        })
       });
 
-      listEl.addEventListener('click', e => {
+      alert('Appointment saved to Appointments sheet.');
+      closeApptModal();
+    } catch (err) {
+      console.error('Failed to save appointment:', err);
+      alert('Could not save appointment.');
+    }
+  }
+
+
+  function setupInteractions() {
+    const list = document.getElementById('todoList');
+    if (list) {
+      list.addEventListener('click', (e) => {
         const badge = e.target.closest('.status-badge');
         if (badge) {
-          const card = badge.closest('.order-card');
-          const id = card ? card.dataset.id : '';
-          const type = badge.dataset.type;
-          const isOn = badge.classList.contains('on');
-          const newVal = isOn ? 'N' : 'Y';
-
-          badge.classList.toggle('on', !isOn);
-          badge.classList.toggle('off', isOn);
-
-          if (type === 'paid') {
-            badge.textContent = isOn ? 'Unpaid' : 'Paid';
-            updateLocalItemFlag(id, 'paid', newVal);
-            sendFlagUpdate(id, 'paid', newVal);
-          } else if (type === 'completed') {
-            badge.textContent = isOn ? 'Incomplete' : 'Complete';
-            updateLocalItemFlag(id, 'completed', newVal);
-            sendFlagUpdate(id, 'completed', newVal);
-          } else if (type === 'called') {
-            badge.textContent = isOn ? 'Not Called' : 'Called';
-            updateLocalItemFlag(id, 'called', newVal);
-            sendFlagUpdate(id, 'called', newVal);
-          }
+          handleBadgeClick(badge);
           return;
         }
 
-        const btn = e.target.closest('.btn-small');
+        const btn = e.target.closest('button[data-action]');
         if (btn) {
-          const action = btn.dataset.action;
-          const card = btn.closest('.order-card');
-          const id = card ? card.dataset.id : '';
-          const item = ALL_ITEMS.find(i => (i.id || '').toString() === id);
-
-          if (action === 'edit') {
-            alert('Edit clicked for ID: ' + id);
-          } else if (action === 'appt') {
-            if (!item) {
-              alert('Could not find this item to prefill appointment.');
-              return;
-            }
-            openApptModal(item);
-          } else if (action === 'out') {
-            const current = (item && item.orderOutTheDoor || '').toUpperCase() === 'Y';
-            const newVal = current ? 'N' : 'Y';
-            updateLocalItemFlag(id, 'out', newVal);
-            sendFlagUpdate(id, 'out', newVal);
-            btn.textContent = current ? 'Mark Out The Door' : 'Undo Out The Door';
-          }
+          handleButtonClick(btn);
+          return;
         }
       });
-
-      // Modal buttons
-      document.getElementById('apptModalCloseBtn')
-        .addEventListener('click', closeApptModal);
-      document.getElementById('apptModalCancelBtn')
-        .addEventListener('click', closeApptModal);
-      document.getElementById('apptModalSaveBtn')
-        .addEventListener('click', handleApptSave);
-
-      // Close modal on backdrop click (outside the modal card)
-      document.getElementById('apptModalBackdrop')
-        .addEventListener('click', e => {
-          if (e.target.id === 'apptModalBackdrop') {
-            closeApptModal();
-          }
-        });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      setupInteractions();
-      loadTodosFromServer();
-    });
-  </script>
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        LAST_SEARCH = e.target.value;
+        renderTodos();
+      });
+    }
+
+    const filterOpenBtn = document.getElementById('filterOpenBtn');
+    if (filterOpenBtn) {
+      filterOpenBtn.addEventListener('click', () => {
+        SHOW_OPEN_ONLY = !SHOW_OPEN_ONLY;
+        filterOpenBtn.classList.toggle('filter-pill-active', SHOW_OPEN_ONLY);
+        filterOpenBtn.textContent = SHOW_OPEN_ONLY ? 'Open Only' : 'All Items';
+        renderTodos();
+      });
+    }
+
+        // Modal wiring
+    const modal = document.getElementById('apptModal');
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeApptModal();
+        }
+      });
+    }
+
+    const apptClose  = document.getElementById('apptClose');
+    const apptCancel = document.getElementById('apptCancel');
+    const apptSave   = document.getElementById('apptSave');
+
+    if (apptClose)  apptClose.addEventListener('click', closeApptModal);
+    if (apptCancel) apptCancel.addEventListener('click', closeApptModal);
+    if (apptSave)   apptSave.addEventListener('click', saveAppointment);
+
+
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupInteractions();
+    loadTodosFromServer();
+  });
+</script>
+
+
 </body>
-</html>

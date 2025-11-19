@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pro Shop – New Service</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
+  <style>
+    :root {
+      --bg: #05070a;
+      --card: #10131a;
+      --card-soft: #151924;
+      --accent: #4da3ff;
+      --accent-soft: rgba(77, 163, 255, 0.18);
+      --border: #222632;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --radius-lg: 16px;
+      --radius-sm: 10px;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.65);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #151927 0, #05070a 46%);
+      color: var(--text);
+    }
+
+    .app { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .app-header {
+      padding: 16px 18px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: linear-gradient(to bottom, rgba(5,7,10,0.97), rgba(5,7,10,0.85) 65%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .app-title-block { display: flex; flex-direction: column; gap: 1px; }
+
+    .app-title { font-size: 20px; font-weight: 600; letter-spacing: 0.02em; }
+
+    .app-subtitle { font-size: 12px; color: var(--muted); }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.25);
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15,23,42,0.7);
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 5px rgba(34,197,94,0.25);
+    }
+
+    .app-main {
+      flex: 1;
+      padding: 0 16px 90px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(77,163,255,0.08), rgba(15,23,42,0.65), #05070a);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15,23,42,0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 14px 12px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .card-tag {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.22);
+      color: var(--muted);
+    }
+
+    .grid { display: grid; gap: 10px; }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .field { display: flex; flex-direction: column; gap: 4px; }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .field-input {
+      width: 100%;
+      padding: 10px 11px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .field-input:focus {
+      border-color: var(--accent);
+      background: rgba(15,23,42,0.95);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .checkbox-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.9);
+      font-size: 12px;
+      color: var(--muted);
+      width: fit-content;
+    }
+
+    .checkbox-wrap input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    /* --- Footer Navigation (Upgraded) --- */
+
+    .app-footer {
+      position: sticky;
+      bottom: 0;
+      background: #0c0f16;
+      padding: 8px 0 4px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .footer-inner {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 0 12px 6px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom right, #60a5fa, #2563eb);
+      border: none;
+      color: white;
+      font-weight: 600;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.9);
+    }
+
+    .bottom-nav {
+      width: 100%;
+      border-top: 1px solid #2d3543;
+      padding-top: 6px;
+    }
+
+    .bottom-nav-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0 6px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      border-radius: 10px;
+      transition: 0.25s ease;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .nav-item-active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 15px;
+      transition: 0.25s ease;
+    }
+
+    .nav-item-active .nav-icon {
+      border-color: var(--accent);
+      background: rgba(77,163,255,0.12);
+      box-shadow: 0 0 8px rgba(77,163,255,0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+
+    <header class="app-header">
+      <div class="app-title-block">
+        <div class="app-title">New Service</div>
+        <div class="app-subtitle">Log a drilling or repair request.</div>
+      </div>
+      <div class="pill">
+        <span class="pill-dot"></span>
+        Service queue
+      </div>
+    </header>
+
+    <main class="app-main">
+
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">Service Details</div>
+          <div class="card-tag">Step 1</div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label class="field-label" for="svcName">Customer Name</label>
+            <input id="svcName" type="text" class="field-input" placeholder="Doug Smith" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="svcPhone">Customer Number</label>
+            <input id="svcPhone" type="tel" class="field-input" placeholder="570-555-1234" />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label" for="svcNeeded">Service Needed</label>
+            <input id="svcNeeded" type="text" class="field-input" placeholder="Plug & redrill, resurface, etc." />
+          </div>
+        </div>
+
+        <!-- NEW: Location directly under Service Needed -->
+        <div class="grid" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label" for="svcLocation">Location</label>
+            <input id="svcLocation" type="text" class="field-input" placeholder="Valley Lanes / Idle Hours South" />
+          </div>
+        </div>
+
+        <div class="grid grid-2" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label">Customer Has Paid</label>
+            <label class="checkbox-wrap">
+              <input id="svcPaid" type="checkbox" />
+              <span>Paid</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="svcDueDate">Service Due Date</label>
+            <input id="svcDueDate" type="date" class="field-input" />
+          </div>
+        </div>
+
+        <div class="grid" style="margin-top: 8px;">
+          <div class="field">
+            <label class="field-label" for="svcStaff">Staff Member</label>
+            <input id="svcStaff" type="text" class="field-input" placeholder="Doug S / Keith / ..." />
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <!-- ✅ Submit button for Services -->
+        <button class="btn-primary" id="saveServiceBtn" type="button">
+          Save Service
+        </button>
+
+        <nav class="bottom-nav">
+          <div class="bottom-nav-row">
+
+            <a href="orderPage.html" class="nav-item">
+              <div class="nav-icon">🧾</div>
+              Orders
+            </a>
+
+            <a href="servicePage.html" class="nav-item nav-item-active">
+              <div class="nav-icon">🛠️</div>
+              Services
+            </a>
+
+            <a href="index.html" class="nav-item">
+              <div class="nav-icon">📋</div>
+              To-Do's
+            </a>
+
+            <a href="appPage.html" class="nav-item">
+              <div class="nav-icon">📅</div>
+              Appts
+            </a>
+
+          </div>
+        </nav>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzj80TczEAq-4OBhzNUSW1yN91JSidKiHmHjplOjCOliuDltkztE6fLqLl7hx5MWaDm/exec'; // <-- your /exec URL
+
+      async function handleSaveService() {
+        const name           = document.getElementById('svcName').value.trim();
+        const phone          = document.getElementById('svcPhone').value.trim();
+        const serviceNeeded  = document.getElementById('svcNeeded').value.trim();
+        const location       = document.getElementById('svcLocation').value.trim();
+        const dueDate        = document.getElementById('svcDueDate').value; // YYYY-MM-DD
+        const staff          = document.getElementById('svcStaff').value.trim();
+        const paid           = document.getElementById('svcPaid').checked;
+
+        const payload = {
+          name,
+          phone,
+          serviceNeeded,
+          location,   // 👈 location now comes from the new field
+          dueDate,
+          staff,
+          paid
+        };
+
+        if (!WEB_APP_URL || !WEB_APP_URL.startsWith('https://')) {
+          alert('Web app URL not set correctly.');
+          return;
+        }
+
+        try {
+          await fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          alert('Service submitted!');
+
+          // Optional: clear form afterwards
+          // document.getElementById('svcName').value = '';
+          // document.getElementById('svcPhone').value = '';
+          // document.getElementById('svcNeeded').value = '';
+          // document.getElementById('svcLocation').value = '';
+          // document.getElementById('svcDueDate').value = '';
+          // document.getElementById('svcStaff').value = '';
+          // document.getElementById('svcPaid').checked = false;
+
+        } catch (err) {
+          console.error(err);
+          alert('Failed to submit service: ' + err.message);
+        }
+      }
+
+      document
+        .getElementById('saveServiceBtn')
+        .addEventListener('click', handleSaveService);
+    })();
+  </script>
+</body>
+</html>
